@@ -1,373 +1,664 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Navshika — Safe Support for Women</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap');
-  *{box-sizing:border-box;margin:0;padding:0}
-  :root{
-    --lav:#8B7FD4;--lav-l:#EAE8F8;--lav-m:#C4BEF0;--lav-d:#5A4FB5;
-    --blue-s:#7BA8D4;--blue-l:#E6EFF8;--sage:#8BB4A8;--sage-l:#E8F3EF;
-    --rose:#D4889A;--rose-l:#F8EEF0;
-    --td:#2D2A3E;--tm:#5A5470;--ts:#8A85A0;
-    --white:#FFF;--cream:#FAFAF8;--card:#FFF;
-    --bdr:rgba(139,127,212,0.15);
-    --r-sm:12px;--r-md:18px;--r-lg:24px;--r-xl:32px;
-  }
-  body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--td);min-height:100vh;overflow-x:hidden}
-  .page{display:none;min-height:100vh}.page.active{display:block}
+/* ── RESET ── */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --lav:#8B7FD4;--lav-l:#EAE8F8;--lav-m:#C4BEF0;--lav-d:#5A4FB5;
+  --blue-s:#7BA8D4;--blue-l:#E6EFF8;
+  --sage:#8BB4A8;--sage-l:#E8F3EF;
+  --rose:#D4889A;--rose-l:#F8EEF0;
+  --td:#2D2A3E;--tm:#5A5470;--ts:#8A85A0;
+  --cream:#FAFAF8;--card:#FFF;
+  --bdr:rgba(139,127,212,0.15);
+  --r-sm:12px;--r-md:18px;--r-lg:24px;--r-xl:32px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--td);min-height:100vh;overflow-x:hidden}
+button{font-family:'DM Sans',sans-serif;cursor:pointer}
+.page{display:none;min-height:100vh}.page.active{display:block}
 
-  /* ── NAV ── */
-  nav{
-    position:sticky;top:0;z-index:200;
-    background:rgba(255,255,255,0.94);backdrop-filter:blur(14px);
-    border-bottom:1px solid var(--bdr);
-    padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:68px;
-  }
-  .nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
-  .nav-logo img{height:40px;width:auto;object-fit:contain;display:block}
-  .nav-logo-text{font-family:'Playfair Display',serif;font-size:21px;color:var(--td);font-weight:500;letter-spacing:-0.3px}
-  .nav-links{display:flex;align-items:center;gap:4px}
-  .nav-link{
-    padding:7px 14px;border-radius:var(--r-sm);font-size:14px;color:var(--tm);
-    cursor:pointer;transition:all 0.2s;border:none;background:transparent;
-    font-family:'DM Sans',sans-serif;
-  }
-  .nav-link:hover{background:var(--lav-l);color:var(--lav)}
-  .nav-link.active{background:var(--lav-l);color:var(--lav);font-weight:500}
-  /* FIXED Quick Exit */
-  .quick-exit{
-    padding:9px 18px;border-radius:var(--r-sm);
-    background:linear-gradient(135deg,#5A4FB5,#8B7FD4);
-    color:#fff;font-size:13px;font-weight:500;cursor:pointer;
-    border:none;transition:all 0.25s;font-family:'DM Sans',sans-serif;
-    white-space:nowrap;box-shadow:0 2px 12px rgba(90,79,181,0.35);
-    letter-spacing:0.2px;
-  }
-  .quick-exit:hover{background:linear-gradient(135deg,#4A3FA5,#7A6FC4);box-shadow:0 4px 20px rgba(90,79,181,0.55);transform:translateY(-1px)}
-  .nav-right{display:flex;align-items:center;gap:10px}
+/* ── EMERGENCY BANNER ── */
+.emergency-banner{background:linear-gradient(90deg,#EDE8FB,#E6EFF8);border-bottom:1px solid var(--bdr);padding:8px 1rem;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;text-align:center}
+.banner-pill{background:var(--lav);color:#fff;font-size:11px;padding:2px 9px;border-radius:20px;white-space:nowrap}
+.banner-text{font-size:12px;color:var(--tm)}
+.banner-link{font-size:12px;color:var(--lav);font-weight:500;cursor:pointer;text-decoration:underline;white-space:nowrap}
 
-  /* HAMBURGER + SLIDE-IN SIDEBAR */
-  .hamburger{display:none;cursor:pointer;flex-direction:column;gap:5px;z-index:300;position:relative}
-  .hamburger span{display:block;width:22px;height:2px;background:var(--tm);border-radius:2px;transition:all 0.3s}
-  .sidebar-overlay{
-    display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:250;
-    opacity:0;transition:opacity 0.35s;
-  }
-  .sidebar-overlay.open{display:block;opacity:1}
-  .sidebar{
-    position:fixed;top:0;right:-320px;width:300px;height:100%;
-    background:linear-gradient(160deg,#2D2A3E 0%,#3D3860 100%);
-    z-index:260;transition:right 0.38s cubic-bezier(0.4,0,0.2,1);
-    padding:80px 0 32px;display:flex;flex-direction:column;
-    box-shadow:-8px 0 40px rgba(0,0,0,0.3);
-  }
-  .sidebar.open{right:0}
-  .sidebar-close{
-    position:absolute;top:20px;right:20px;
-    width:36px;height:36px;border-radius:50%;
-    background:rgba(255,255,255,0.12);border:none;color:#fff;
-    font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;
-    transition:background 0.2s;
-  }
-  .sidebar-close:hover{background:rgba(255,255,255,0.22)}
-  .sidebar-link{
-    padding:14px 28px;font-size:15px;color:rgba(255,255,255,0.85);
-    cursor:pointer;transition:all 0.2s;border:none;background:transparent;
-    font-family:'DM Sans',sans-serif;text-align:left;border-left:3px solid transparent;
-  }
-  .sidebar-link:hover{background:rgba(255,255,255,0.08);color:#fff;border-left-color:var(--lav-m)}
-  .sidebar-link.active{color:#fff;background:rgba(139,127,212,0.2);border-left-color:var(--lav)}
-  .sidebar-divider{height:1px;background:rgba(255,255,255,0.1);margin:16px 28px}
-  .sidebar-exit{
-    margin:20px 28px 0;padding:12px 20px;
-    background:linear-gradient(135deg,#5A4FB5,#8B7FD4);
-    color:#fff;border:none;border-radius:var(--r-sm);
-    font-size:14px;font-weight:500;cursor:pointer;
-    font-family:'DM Sans',sans-serif;transition:all 0.2s;
-  }
-  .sidebar-exit:hover{box-shadow:0 4px 16px rgba(90,79,181,0.4)}
+/* ── NAVBAR ── */
+nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--bdr);padding:0 1rem;display:flex;align-items:center;justify-content:space-between;height:62px;gap:8px}
+.nav-logo{display:flex;align-items:center;gap:8px;cursor:pointer;min-width:0}
+.nav-logo-mark{flex-shrink:0;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--lav-d),var(--lav));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:500;font-size:13px}
+.nav-logo-text{font-family:'Playfair Display',serif;font-size:19px;color:var(--td);font-weight:500;letter-spacing:-0.3px;white-space:nowrap}
+/* Desktop links — hidden by default, shown at ≥1024px */
+.nav-links{display:none;align-items:center;gap:2px}
+.nav-link{padding:7px 11px;border-radius:var(--r-sm);font-size:13px;color:var(--tm);transition:all 0.2s;border:none;background:transparent;white-space:nowrap}
+.nav-link:hover{background:var(--lav-l);color:var(--lav)}
+.nav-link.active{background:var(--lav-l);color:var(--lav);font-weight:500}
+.nav-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.quick-exit{padding:8px 13px;border-radius:var(--r-sm);background:linear-gradient(135deg,#5A4FB5,#8B7FD4);color:#fff;font-size:12px;font-weight:500;border:none;transition:all 0.25s;white-space:nowrap;box-shadow:0 2px 12px rgba(90,79,181,0.35)}
+.quick-exit:hover{box-shadow:0 4px 20px rgba(90,79,181,0.55);transform:translateY(-1px)}
+/* Hamburger — shown on mobile, hidden at ≥1024px */
+.hamburger{display:flex;flex-direction:column;gap:5px;padding:4px;background:none;border:none}
+.hamburger span{display:block;width:21px;height:2px;background:var(--tm);border-radius:2px;transition:all 0.3s}
 
-  /* ── EMERGENCY BANNER ── */
-  .emergency-banner{
-    background:linear-gradient(90deg,#EDE8FB,#E6EFF8);
-    border-bottom:1px solid var(--bdr);padding:10px 1.5rem;
-    display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;
-  }
-  .banner-pill{background:var(--lav);color:#fff;font-size:12px;padding:3px 10px;border-radius:20px}
-  .banner-text{font-size:13px;color:var(--tm)}
-  .banner-link{font-size:13px;color:var(--lav);font-weight:500;cursor:pointer;text-decoration:underline}
+/* ── SIDEBAR ── */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:250;opacity:0;transition:opacity 0.35s}
+.sidebar-overlay.open{display:block;opacity:1}
+.sidebar{position:fixed;top:0;right:-320px;width:min(300px,88vw);height:100%;background:linear-gradient(160deg,#2D2A3E 0%,#3D3860 100%);z-index:260;transition:right 0.38s cubic-bezier(0.4,0,0.2,1);padding:74px 0 32px;display:flex;flex-direction:column;box-shadow:-8px 0 40px rgba(0,0,0,0.35);overflow-y:auto}
+.sidebar.open{right:0}
+.sidebar-close{position:absolute;top:17px;right:15px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.12);border:none;color:#fff;font-size:17px;display:flex;align-items:center;justify-content:center;transition:background 0.2s}
+.sidebar-close:hover{background:rgba(255,255,255,0.22)}
+.sidebar-link{padding:13px 22px;font-size:15px;color:rgba(255,255,255,0.85);transition:all 0.2s;border:none;background:transparent;text-align:left;border-left:3px solid transparent}
+.sidebar-link:hover{background:rgba(255,255,255,0.08);color:#fff;border-left-color:var(--lav-m)}
+.sidebar-link.active{color:#fff;background:rgba(139,127,212,0.2);border-left-color:var(--lav)}
+.sidebar-divider{height:1px;background:rgba(255,255,255,0.1);margin:14px 22px}
+.sidebar-info{padding:0 22px}
+.sidebar-info .si-label{font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:8px}
+.sidebar-info p{font-size:14px;color:rgba(255,255,255,0.8)}
+.sidebar-info strong{color:#C4BEF0}
+.sidebar-exit{margin:18px 22px 0;padding:11px 18px;background:linear-gradient(135deg,#5A4FB5,#8B7FD4);color:#fff;border:none;border-radius:var(--r-sm);font-size:14px;font-weight:500;transition:all 0.2s}
+.sidebar-exit:hover{box-shadow:0 4px 16px rgba(90,79,181,0.4)}
 
-  /* ── HERO with blurred bg ── */
-  .hero-wrap{
-    position:relative;overflow:hidden;
-    background:linear-gradient(160deg,#1a1535 0%,#2e2460 40%,#4a3a80 70%,#6b4fa0 100%);
-    padding:90px 1.5rem 70px;text-align:center;
-  }
-  .hero-wrap::before{
-    content:'';position:absolute;inset:0;
-    background:
-      radial-gradient(ellipse 60% 50% at 20% 30%,rgba(139,127,212,0.35) 0%,transparent 70%),
-      radial-gradient(ellipse 50% 60% at 80% 70%,rgba(123,168,212,0.28) 0%,transparent 70%),
-      radial-gradient(ellipse 40% 40% at 60% 20%,rgba(196,190,240,0.2) 0%,transparent 60%);
-    z-index:0;
-  }
-  /* floating soft circles for depth */
-  .hero-wrap::after{
-    content:'';position:absolute;
-    width:600px;height:600px;border-radius:50%;
-    background:radial-gradient(circle,rgba(139,127,212,0.15) 0%,transparent 70%);
-    top:-200px;right:-100px;z-index:0;
-  }
-  .hero-inner{position:relative;z-index:1;max-width:860px;margin:0 auto}
-  .hero-badge{
-    display:inline-flex;align-items:center;gap:8px;
-    background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);
-    border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.9);
-    border-radius:30px;padding:7px 18px;font-size:13px;font-weight:400;margin-bottom:28px;
-  }
-  .hero-badge-dot{width:7px;height:7px;border-radius:50%;background:#C4BEF0;animation:pulse 2s infinite}
-  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.6;transform:scale(1.3)}}
-  .hero h1{
-    font-family:'Playfair Display',serif;
-    font-size:clamp(2.4rem,5.5vw,3.8rem);color:#fff;
-    line-height:1.18;margin-bottom:20px;font-weight:400;
-  }
-  .hero h1 em{color:#C4BEF0;font-style:italic}
-  .hero-sub{
-    font-size:clamp(1rem,2vw,1.15rem);color:rgba(255,255,255,0.78);
-    line-height:1.72;max-width:560px;margin:0 auto 40px;
-  }
-  .hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-  .btn-primary{
-    padding:13px 26px;border-radius:var(--r-md);
-    background:rgba(255,255,255,0.95);color:var(--lav-d);
-    font-size:15px;font-weight:500;cursor:pointer;border:none;
-    transition:all 0.25s;font-family:'DM Sans',sans-serif;
-    box-shadow:0 4px 20px rgba(0,0,0,0.15);
-  }
-  .btn-primary:hover{background:#fff;transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,0.2)}
-  .btn-secondary{
-    padding:13px 26px;border-radius:var(--r-md);
-    background:rgba(255,255,255,0.12);backdrop-filter:blur(6px);
-    color:#fff;font-size:15px;font-weight:400;cursor:pointer;
-    border:1.5px solid rgba(255,255,255,0.3);transition:all 0.25s;
-    font-family:'DM Sans',sans-serif;
-  }
-  .btn-secondary:hover{background:rgba(255,255,255,0.22);transform:translateY(-2px)}
-  .btn-emergency{
-    padding:13px 26px;border-radius:var(--r-md);
-    background:rgba(208,64,100,0.85);backdrop-filter:blur(6px);
-    color:#fff;font-size:15px;font-weight:500;cursor:pointer;
-    border:1.5px solid rgba(255,150,170,0.4);transition:all 0.25s;
-    font-family:'DM Sans',sans-serif;
-  }
-  .btn-emergency:hover{background:rgba(208,64,100,1);transform:translateY(-2px);box-shadow:0 6px 22px rgba(208,64,100,0.4)}
+/* ── HERO ── */
+.hero-wrap{position:relative;overflow:hidden;background:linear-gradient(160deg,#1a1535 0%,#2e2460 40%,#4a3a80 70%,#6b4fa0 100%);padding:56px 1rem 48px;text-align:center}
+.hero-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 20% 30%,rgba(139,127,212,0.35) 0%,transparent 70%),radial-gradient(ellipse 50% 60% at 80% 70%,rgba(123,168,212,0.28) 0%,transparent 70%);z-index:0}
+.hero-wrap::after{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(139,127,212,0.15) 0%,transparent 70%);top:-160px;right:-80px;z-index:0}
+.hero-inner{position:relative;z-index:1;max-width:860px;margin:0 auto;width:100%}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.9);border-radius:30px;padding:6px 15px;font-size:12px;margin-bottom:20px}
+.hero-badge-dot{width:7px;height:7px;border-radius:50%;background:#C4BEF0;animation:pulse 2s infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.6;transform:scale(1.3)}}
+.hero-wrap h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,7vw,3.8rem);color:#fff;line-height:1.18;margin-bottom:16px;font-weight:400}
+.hero-wrap h1 em{color:#C4BEF0;font-style:italic}
+.hero-sub{font-size:clamp(0.93rem,2.5vw,1.12rem);color:rgba(255,255,255,0.78);line-height:1.72;max-width:540px;margin:0 auto 28px}
 
-  /* ── PREMIUM HERO CARDS (replace emoji buttons) ── */
-  .hero-cards{
-    display:flex;gap:16px;justify-content:center;flex-wrap:wrap;
-    margin-top:48px;position:relative;z-index:1;
-    max-width:860px;margin-left:auto;margin-right:auto;
-  }
-  .hero-card{
-    flex:1;min-width:200px;max-width:260px;
-    border-radius:20px;overflow:hidden;cursor:pointer;
-    position:relative;height:200px;
-    box-shadow:0 8px 32px rgba(0,0,0,0.25);
-    transition:all 0.35s cubic-bezier(0.4,0,0.2,1);
-    border:1px solid rgba(255,255,255,0.15);
-  }
-  .hero-card:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 16px 48px rgba(0,0,0,0.35)}
-  .hero-card-bg{position:absolute;inset:0;z-index:0}
-  .hero-card-overlay{
-    position:absolute;inset:0;z-index:1;
-    background:linear-gradient(to top,rgba(30,20,60,0.85) 0%,rgba(30,20,60,0.3) 50%,rgba(30,20,60,0.1) 100%);
-  }
-  .hero-card-content{
-    position:absolute;bottom:0;left:0;right:0;z-index:2;
-    padding:18px 18px 20px;
-  }
-  .hero-card-icon{font-size:24px;margin-bottom:6px;display:block}
-  .hero-card-content h4{font-size:15px;font-weight:500;color:#fff;line-height:1.3}
-  .hero-card-content p{font-size:12px;color:rgba(255,255,255,0.72);margin-top:3px;line-height:1.4}
+/* Hero buttons — column on mobile, row on sm+ */
+.hero-actions{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+.btn-hero-primary,.btn-hero-secondary,.btn-hero-emergency{width:100%;max-width:320px;padding:13px 20px;border-radius:var(--r-md);font-size:14px;font-weight:500;border:none;transition:all 0.25s;text-align:center}
+.btn-hero-primary{background:rgba(255,255,255,0.95);color:var(--lav-d);box-shadow:0 4px 20px rgba(0,0,0,0.15)}
+.btn-hero-primary:hover{background:#fff;transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,0.2)}
+.btn-hero-secondary{background:rgba(255,255,255,0.12);backdrop-filter:blur(6px);color:#fff;border:1.5px solid rgba(255,255,255,0.3)!important}
+.btn-hero-secondary:hover{background:rgba(255,255,255,0.22);transform:translateY(-2px)}
+.btn-hero-emergency{background:rgba(208,64,100,0.85);color:#fff;border:1.5px solid rgba(255,150,170,0.4)!important}
+.btn-hero-emergency:hover{background:rgba(208,64,100,1);transform:translateY(-2px);box-shadow:0 6px 22px rgba(208,64,100,0.4)}
 
-  /* card SVG background scenes */
-  .card-scene-story{
-    background:linear-gradient(140deg,#4a2060 0%,#7a4aaa 40%,#9b6bc8 70%,#c49ae0 100%);
-  }
-  .card-scene-counsel{
-    background:linear-gradient(140deg,#1a3a5c 0%,#2a5a8c 40%,#4a7aac 70%,#7aaad4 100%);
-  }
-  .card-scene-emergency{
-    background:linear-gradient(140deg,#3c1020 0%,#6c2040 40%,#9c4060 70%,#c47090 100%);
-  }
+/* Hero cards — 1-col on mobile, 3-col on sm+ */
+.hero-cards{display:grid;grid-template-columns:1fr;gap:10px;margin-top:32px;position:relative;z-index:1}
+.hero-card{border-radius:16px;overflow:hidden;position:relative;height:150px;box-shadow:0 8px 32px rgba(0,0,0,0.25);transition:all 0.35s cubic-bezier(0.4,0,0.2,1);border:1px solid rgba(255,255,255,0.15)}
+.hero-card:hover{transform:translateY(-5px) scale(1.01);box-shadow:0 16px 48px rgba(0,0,0,0.35)}
+.hero-card-bg{position:absolute;inset:0;z-index:0}
+.hero-card-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(30,20,60,0.85) 0%,rgba(30,20,60,0.2) 60%,transparent 100%)}
+.hero-card-content{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:14px 16px 16px}
+.hero-card-content h4{font-size:14px;font-weight:500;color:#fff;line-height:1.3}
+.hero-card-content p{font-size:11px;color:rgba(255,255,255,0.72);margin-top:2px}
+.card-scene-story{background:linear-gradient(140deg,#4a2060 0%,#7a4aaa 40%,#9b6bc8 70%,#c49ae0 100%)}
+.card-scene-counsel{background:linear-gradient(140deg,#1a3a5c 0%,#2a5a8c 40%,#4a7aac 70%,#7aaad4 100%)}
+.card-scene-emergency{background:linear-gradient(140deg,#3c1020 0%,#6c2040 40%,#9c4060 70%,#c47090 100%)}
 
-  /* decorative shapes inside hero cards */
-  .scene-shape{position:absolute;border-radius:50%;opacity:0.18}
+/* ── TRUST STRIP ── */
+.trust-strip{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:20px 1rem;background:#fff}
+.trust-item{display:flex;align-items:center;gap:7px;background:var(--lav-l);border:1px solid var(--lav-m);border-radius:30px;padding:7px 13px;font-size:12px;color:var(--tm);transition:all 0.2s;white-space:nowrap}
+.trust-item:hover{background:var(--lav-m)}
+.trust-svg{width:13px;height:13px;flex-shrink:0}
 
-  /* ── TRUST STRIP ── */
-  .trust-strip{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;padding:32px 1.5rem;background:var(--white)}
-  .trust-item{
-    display:flex;align-items:center;gap:10px;
-    background:var(--lav-l);border:1px solid var(--lav-m);
-    border-radius:30px;padding:10px 18px;font-size:13px;color:var(--tm);
-    transition:all 0.2s;
-  }
-  .trust-item:hover{background:var(--lav-m);border-color:var(--lav)}
-  .trust-svg{width:16px;height:16px;flex-shrink:0}
+/* ── SECTIONS ── */
+.section{padding:44px 1rem}.section-inner{max-width:1100px;margin:0 auto;width:100%}
+.section-alt{background:#fff}
+.section-label{font-size:11px;font-weight:500;letter-spacing:1.8px;text-transform:uppercase;color:var(--lav);margin-bottom:9px}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.55rem,4vw,2.3rem);color:var(--td);font-weight:400;margin-bottom:11px;line-height:1.3}
+.section-sub{font-size:14px;color:var(--tm);max-width:540px;line-height:1.72}
+.section-header{margin-bottom:32px}
 
-  /* ── SECTIONS ── */
-  .section{padding:64px 1.5rem}.section-inner{max-width:1100px;margin:0 auto}
-  .section-alt{background:var(--white)}
-  .section-label{font-size:11.5px;font-weight:500;letter-spacing:1.8px;text-transform:uppercase;color:var(--lav);margin-bottom:10px}
-  .section-title{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,3.2vw,2.3rem);color:var(--td);font-weight:400;margin-bottom:14px;line-height:1.3}
-  .section-sub{font-size:15px;color:var(--tm);max-width:540px;line-height:1.72}
-  .section-header{margin-bottom:44px}
+/* How grid — 1 col → 2 col sm → 4 col lg */
+.how-grid{display:grid;grid-template-columns:1fr;gap:12px}
+.how-item{padding:22px 18px;border-radius:var(--r-md);background:linear-gradient(160deg,#2D2A3E 0%,#3a3660 100%);border:1px solid rgba(139,127,212,0.25);transition:all 0.28s}
+.how-item:hover{transform:translateY(-4px);border-color:rgba(196,190,240,0.5);box-shadow:0 12px 36px rgba(45,42,62,0.25)}
+.how-num{font-family:'Playfair Display',serif;font-size:1.9rem;color:rgba(196,190,240,0.45);font-weight:400;margin-bottom:10px}
+.how-item h4{font-size:14px;font-weight:500;margin-bottom:6px;color:#fff}
+.how-item p{font-size:13px;color:rgba(255,255,255,0.6);line-height:1.65}
 
-  /* ── HOW WE HELP — dark card style ── */
-  .how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
-  .how-item{
-    padding:28px 22px;border-radius:var(--r-md);
-    background:linear-gradient(160deg,#2D2A3E 0%,#3a3660 100%);
-    border:1px solid rgba(139,127,212,0.25);
-    transition:all 0.28s;
-  }
-  .how-item:hover{transform:translateY(-4px);border-color:rgba(196,190,240,0.5);box-shadow:0 12px 36px rgba(45,42,62,0.25)}
-  .how-num{font-family:'Playfair Display',serif;font-size:2.2rem;color:rgba(196,190,240,0.45);font-weight:400;margin-bottom:12px}
-  .how-item h4{font-size:15px;font-weight:500;margin-bottom:7px;color:#fff}
-  .how-item p{font-size:13px;color:rgba(255,255,255,0.6);line-height:1.65}
+/* Feature cards — fluid */
+.feature-cards{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.feature-card{position:relative;overflow:hidden;border-radius:var(--r-lg);flex:1 1 130px;max-width:190px;min-width:120px;height:105px;box-shadow:0 4px 20px rgba(0,0,0,0.12);transition:all 0.3s cubic-bezier(0.4,0,0.2,1)}
+.feature-card:hover{transform:translateY(-5px);box-shadow:0 12px 36px rgba(0,0,0,0.2)}
+.feature-card-bg{position:absolute;inset:0;z-index:0}
+.feature-card-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(20,15,45,0.82) 0%,rgba(20,15,45,0.2) 60%,transparent 100%)}
+.feature-card-text{position:absolute;bottom:9px;left:11px;right:11px;z-index:2;color:#fff;font-size:12px;font-weight:500;line-height:1.3}
 
-  /* ── FEATURE / TRUST VISUAL CARDS ── */
-  .feature-cards{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
-  .feature-card{
-    position:relative;overflow:hidden;border-radius:var(--r-lg);
-    width:180px;height:120px;cursor:default;
-    box-shadow:0 4px 20px rgba(0,0,0,0.12);
-    transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
-    flex-shrink:0;
-  }
-  .feature-card:hover{transform:translateY(-5px);box-shadow:0 12px 36px rgba(0,0,0,0.2)}
-  .feature-card-bg{position:absolute;inset:0;z-index:0}
-  .feature-card-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(20,15,45,0.82) 0%,rgba(20,15,45,0.2) 60%,transparent 100%)}
-  .feature-card-text{position:absolute;bottom:12px;left:14px;right:14px;z-index:2;color:#fff;font-size:13px;font-weight:500;line-height:1.3}
+/* Card grids — 1 col → 2 → 3/4 */
+.cards-3{display:grid;grid-template-columns:1fr;gap:14px}
+.cards-4{display:grid;grid-template-columns:1fr;gap:14px}
+.card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r-lg);padding:22px 18px;transition:all 0.28s;cursor:pointer}
+.card:hover{transform:translateY(-4px);border-color:var(--lav-m);box-shadow:0 10px 32px rgba(139,127,212,0.12)}
+.card-icon-wrap{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.card-icon-wrap.purple{background:var(--lav-l)}.card-icon-wrap.blue{background:var(--blue-l)}.card-icon-wrap.sage{background:var(--sage-l)}
+.card h3{font-size:15px;font-weight:500;color:var(--td);margin-bottom:7px;line-height:1.3}
+.card p{font-size:13px;color:var(--ts);line-height:1.68}
+.card-link{display:inline-flex;align-items:center;gap:5px;margin-top:13px;font-size:13px;font-weight:500;color:var(--lav);transition:gap 0.2s}
+.card-link:hover{gap:9px}
 
-  /* ── MAIN FEATURE CARDS ── */
-  .cards-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
-  .card{
-    background:var(--card);border:1px solid var(--bdr);
-    border-radius:var(--r-lg);padding:28px 24px;transition:all 0.28s;cursor:pointer;
-  }
-  .card:hover{transform:translateY(-4px);border-color:var(--lav-m);box-shadow:0 10px 32px rgba(139,127,212,0.12)}
-  .card-icon-wrap{
-    width:52px;height:52px;border-radius:14px;
-    display:flex;align-items:center;justify-content:center;margin-bottom:18px;
-  }
-  .card-icon-wrap.purple{background:var(--lav-l)}
-  .card-icon-wrap.blue{background:var(--blue-l)}
-  .card-icon-wrap.sage{background:var(--sage-l)}
-  .card h3{font-size:16px;font-weight:500;color:var(--td);margin-bottom:8px;line-height:1.3}
-  .card p{font-size:14px;color:var(--ts);line-height:1.68}
-  .card-link{display:inline-flex;align-items:center;gap:5px;margin-top:16px;font-size:13px;font-weight:500;color:var(--lav);transition:gap 0.2s}
-  .card-link:hover{gap:9px}
+/* ── CTA ── */
+.cta-wrap{position:relative;overflow:hidden;border-radius:var(--r-xl);margin:0 0.75rem;background:linear-gradient(135deg,#1a1535 0%,#2e2460 40%,#4a3a80 70%,#6b4fa0 100%);padding:40px 18px;text-align:center}
+.cta-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 30% 50%,rgba(139,127,212,0.25) 0%,transparent 70%),radial-gradient(ellipse 50% 60% at 75% 30%,rgba(123,168,212,0.2) 0%,transparent 70%)}
+.cta-inner{position:relative;z-index:1}
+.cta-wrap h2{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,4.5vw,2rem);margin-bottom:10px;font-weight:400;color:#fff}
+.cta-wrap .cta-sub{color:rgba(255,255,255,0.75);margin-bottom:22px;font-size:14px;line-height:1.65}
+.cta-actions{display:flex;flex-direction:column;align-items:center;gap:10px}
+.btn-cta-p,.btn-cta-s{width:100%;max-width:300px;padding:13px 22px;border-radius:var(--r-md);font-size:14px;font-weight:500;border:none;transition:all 0.25s}
+.btn-cta-p{background:rgba(255,255,255,0.95);color:var(--lav-d);box-shadow:0 4px 20px rgba(0,0,0,0.15)}
+.btn-cta-p:hover{background:#fff;transform:translateY(-2px)}
+.btn-cta-s{background:rgba(255,255,255,0.12);backdrop-filter:blur(6px);color:#fff;border:1.5px solid rgba(255,255,255,0.3)!important}
+.btn-cta-s:hover{background:rgba(255,255,255,0.22);transform:translateY(-2px)}
 
-  /* ── CTA SECTION ── */
-  .cta-wrap{
-    position:relative;overflow:hidden;border-radius:var(--r-xl);
-    margin:0 1.5rem;
-    background:linear-gradient(135deg,#1a1535 0%,#2e2460 40%,#4a3a80 70%,#6b4fa0 100%);
-    padding:60px 40px;text-align:center;
-  }
-  .cta-wrap::before{
-    content:'';position:absolute;inset:0;
-    background:radial-gradient(ellipse 70% 80% at 30% 50%,rgba(139,127,212,0.25) 0%,transparent 70%),
-              radial-gradient(ellipse 50% 60% at 75% 30%,rgba(123,168,212,0.2) 0%,transparent 70%);
-  }
-  .cta-inner{position:relative;z-index:1}
-  .cta-wrap h2{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.2vw,2.1rem);margin-bottom:12px;font-weight:400;color:#fff}
-  .cta-wrap p{color:rgba(255,255,255,0.75);margin-bottom:28px;font-size:15px;line-height:1.65}
+/* ── FORMS ── */
+.form-page{max-width:680px;margin:0 auto;padding:36px 1rem 56px}
+.form-intro-card{background:var(--lav-l);border:1px solid var(--lav-m);border-radius:var(--r-lg);padding:18px 20px;margin-bottom:20px}
+.form-intro-card p{font-size:13px;color:var(--tm);line-height:1.7}
+.form-intro-card strong{color:var(--lav);font-weight:500}
+.form-group{margin-bottom:18px}
+.form-label{display:block;font-size:14px;font-weight:500;color:var(--td);margin-bottom:6px}
+.form-optional{font-size:12px;color:var(--ts);font-weight:400;margin-left:4px}
+.form-input,.form-select,.form-textarea{width:100%;padding:11px 14px;border:1.5px solid var(--bdr);border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:15px;color:var(--td);background:#fff;transition:border-color 0.2s;outline:none;-webkit-appearance:none;appearance:none}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--lav)}
+.form-textarea{resize:vertical;min-height:130px}
+/* form-row: 1 col mobile, 2 col on sm+ */
+.form-row{display:grid;grid-template-columns:1fr;gap:0}
+.form-note{font-size:12px;color:var(--ts);margin-top:5px;display:flex;align-items:center;gap:5px}
+.upload-zone{border:2px dashed var(--lav-m);border-radius:var(--r-sm);padding:24px 16px;text-align:center;cursor:pointer;background:var(--lav-l);transition:all 0.2s}
+.upload-zone:hover{border-color:var(--lav);background:#E3DFF5}
+.upload-zone p{font-size:13px;color:var(--tm)}
+.upload-zone span{font-size:11px;color:var(--ts)}
+.privacy-box{background:var(--sage-l);border:1px solid #B8D9D0;border-radius:var(--r-sm);padding:13px 15px;font-size:13px;color:#3D7A6E;line-height:1.6;margin-bottom:18px;display:flex;gap:9px;align-items:flex-start}
+.form-submit{width:100%;padding:14px;border-radius:var(--r-md);background:linear-gradient(135deg,var(--lav-d),var(--lav));color:#fff;font-size:15px;font-weight:500;border:none;transition:all 0.25s;box-shadow:0 4px 16px rgba(90,79,181,0.3)}
+.form-submit:hover{box-shadow:0 6px 24px rgba(90,79,181,0.45);transform:translateY(-1px)}
 
-  /* ── FORMS ── */
-  .form-page{max-width:680px;margin:0 auto;padding:60px 1.5rem}
-  .form-intro-card{background:var(--lav-l);border:1px solid var(--lav-m);border-radius:var(--r-lg);padding:24px 28px;margin-bottom:32px}
-  .form-intro-card p{font-size:14px;color:var(--tm);line-height:1.7}
-  .form-intro-card strong{color:var(--lav);font-weight:500}
-  .form-group{margin-bottom:22px}
-  .form-label{display:block;font-size:14px;font-weight:500;color:var(--td);margin-bottom:8px}
-  .form-optional{font-size:12px;color:var(--ts);font-weight:400;margin-left:4px}
-  .form-input,.form-select,.form-textarea{
-    width:100%;padding:12px 16px;border:1.5px solid var(--bdr);
-    border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:15px;
-    color:var(--td);background:#fff;transition:border-color 0.2s;outline:none;
-  }
-  .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--lav)}
-  .form-textarea{resize:vertical;min-height:140px}
-  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  .form-note{font-size:13px;color:var(--ts);margin-top:6px;display:flex;align-items:center;gap:5px}
-  .upload-zone{
-    border:2px dashed var(--lav-m);border-radius:var(--r-sm);
-    padding:32px;text-align:center;cursor:pointer;
-    background:var(--lav-l);transition:all 0.2s;
-  }
-  .upload-zone:hover{border-color:var(--lav);background:#E3DFF5}
-  .upload-zone p{font-size:14px;color:var(--tm)}
-  .upload-zone span{font-size:12px;color:var(--ts)}
-  .privacy-box{
-    background:var(--sage-l);border:1px solid #B8D9D0;
-    border-radius:var(--r-sm);padding:16px 18px;
-    font-size:13px;color:#3D7A6E;line-height:1.6;
-    margin-bottom:24px;display:flex;gap:10px;
-  }
-  .form-submit{
-    width:100%;padding:15px;border-radius:var(--r-md);
-    background:linear-gradient(135deg,var(--lav-d),var(--lav));
-    color:#fff;font-size:16px;font-weight:500;cursor:pointer;border:none;
-    transition:all 0.25s;font-family:'DM Sans',sans-serif;
-    box-shadow:0 4px 16px rgba(90,79,181,0.3);
-  }
-  .form-submit:hover{box-shadow:0 6px 24px rgba(90,79,181,0.45);transform:translateY(-1px)}
+/* ── COUNSELING ── */
+.counseling-layout{display:grid;grid-template-columns:1fr;gap:22px;max-width:1000px;margin:0 auto}
+.counselor-card{background:#fff;border:1px solid var(--bdr);border-radius:var(--r-lg);padding:18px;display:flex;gap:13px;margin-bottom:11px;transition:all 0.22s}
+.counselor-card:hover{border-color:var(--lav-m);box-shadow:0 6px 20px rgba(139,127,212,0.1)}
+.counselor-avatar{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.counselor-info h4{font-size:14px;font-weight:500;margin-bottom:3px}
+.counselor-info p{font-size:12px;color:var(--ts);margin-bottom:7px}
+.counselor-tags{display:flex;gap:5px;flex-wrap:wrap}
+.tag{font-size:11px;padding:3px 9px;border-radius:20px;background:var(--lav-l);color:var(--lav);font-weight:500}
+.tag.blue{background:var(--blue-l);color:var(--blue-s)}.tag.sage{background:var(--sage-l);color:var(--sage)}
+.free-badge{display:inline-flex;align-items:center;gap:4px;background:var(--sage-l);border:1px solid #B8D9D0;color:#3D7A6E;border-radius:20px;padding:3px 11px;font-size:12px;font-weight:500}
+.counseling-info{background:var(--lav-l);border:1px solid var(--lav-m);border-radius:var(--r-lg);padding:20px;margin-bottom:18px}
+.counseling-info h3{font-size:14px;font-weight:500;margin-bottom:8px}
+.counseling-info p{font-size:13px;color:var(--tm);line-height:1.65}
+.counseling-info ul{list-style:none;display:flex;flex-direction:column;gap:7px;margin-top:9px}
+.counseling-info li{font-size:13px;color:var(--tm);display:flex;align-items:center;gap:7px}
+.check{color:var(--sage);font-size:13px}
+.time-slots{display:flex;gap:7px;flex-wrap:wrap;margin-top:7px}
+.time-slot{padding:7px 12px;border-radius:var(--r-sm);border:1.5px solid var(--bdr);font-size:13px;background:#fff;transition:all 0.2s;color:var(--tm)}
+.time-slot:hover,.time-slot.selected{background:var(--lav);color:#fff;border-color:var(--lav)}
+.badges-row{display:flex;gap:7px;margin-bottom:20px;flex-wrap:wrap}
 
-  /* ── COUNSELING ── */
-  .counseling-layout{display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:1000px;margin:0 auto}
-  .counselor-card{background:#fff;border:1px solid var(--bdr);border-radius:var(--r-lg);padding:22px;display:flex;gap:16px;margin-bottom:14px;transition:all 0.22s}
-  .counselor-card:hover{border-color:var(--lav-m);box-shadow:0 6px 20px rgba(139,127,212,0.1)}
-  .counselor-avatar{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-  .counselor-info h4{font-size:15px;font-weight:500;margin-bottom:4px}
-  .counselor-info p{font-size:13px;color:var(--ts);margin-bottom:8px}
-  .counselor-tags{display:flex;gap:6px;flex-wrap:wrap}
-  .tag{font-size:11px;padding:3px 10px;border-radius:20px;background:var(--lav-l);color:var(--lav);font-weight:500}
-  .tag.blue{background:var(--blue-l);color:var(--blue-s)}
-  .tag.sage{background:var(--sage-l);color:var(--sage)}
-  .free-badge{display:inline-flex;align-items:center;gap:4px;background:var(--sage-l);border:1px solid #B8D9D0;color:#3D7A6E;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:500}
-  .counseling-info{background:var(--lav-l);border:1px solid var(--lav-m);border-radius:var(--r-lg);padding:26px 22px;margin-bottom:22px}
-  .counseling-info h3{font-size:16px;font-weight:500;margin-bottom:10px}
-  .counseling-info p{font-size:14px;color:var(--tm);line-height:1.65}
-  .counseling-info ul{list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:12px}
-  .counseling-info ul li{font-size:14px;color:var(--tm);display:flex;align-items:center;gap:8px}
-  .check{color:var(--sage);font-size:15px}
-  .time-slots{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-  .time-slot{padding:8px 14px;border-radius:var(--r-sm);border:1.5px solid var(--bdr);font-size:13px;cursor:pointer;background:#fff;transition:all 0.2s;color:var(--tm)}
-  .time-slot:hover,.time-slot.selected{background:var(--lav);color:#fff;border-color:var(--lav)}
+/* ── RESOURCES ── */
+.resource-card{background:#fff;border:1px solid var(--bdr);border-radius:var(--r-lg);padding:20px 18px;transition:all 0.28s;cursor:pointer}
+.resource-card:hover{transform:translateY(-4px);border-color:var(--lav-m);box-shadow:0 10px 30px rgba(139,127,212,0.1)}
+.resource-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:9px}
+.resource-tag{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px}
+.resource-card h3{font-size:14px;font-weight:500;color:var(--td);margin-bottom:6px;line-height:1.4}
+.resource-card p{font-size:13px;color:var(--ts);line-height:1.62}
+.resource-read{font-size:12px;color:var(--lav);font-weight:500;margin-top:11px;display:flex;align-items:center;gap:4px}
 
-  /* ── RESOURCES ── */
-  .cards-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
-  .resource-card{background:#fff;border:1px solid var(--bdr);border-radius:var(--r-lg);padding:26px 22px;transition:all 0.28s;cursor:pointer}
-  .resource-card:hover{transform:translateY(-4px);border-color:var(--lav-m);box-shadow:0 10px 30px rgba(139,127,212,0.1)}
-  .resource-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
-  .resource-tag{font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px}
-  .resource-card h3{font-size:15px;font-weight:500;color:var(--td);margin-bottom:8px;line-height:1.4}
-  .resource-card p{font-size:13.5px;color:var(--ts);line-height:1.62}
-  .resource-read{font-size:13px;color:var(--lav);font-weight:500;margin-top:14px;display:flex;align-items:center;gap:4px}
+/* ── EMERGENCY ── */
+.emergency-page{max-width:680px;margin:0 auto;padding:36px 1rem 56px}
+.emergency-btn-large{display:flex;align-items:center;gap:13px;padding:16px;border-radius:var(--r-md);border:none;width:100%;transition:all 0.22s;margin-bottom:10px;text-align:left}
+.emergency-btn-large:hover{transform:translateX(4px);box-shadow:0 8px 24px rgba(0,0,0,0.1)}
+.e-icon{width:46px;height:46px;min-width:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.e-text strong{display:block;font-size:14px;font-weight:500;color:var(--td)}
+.e-text span{font-size:12px;color:var(--ts)}
+.e-number{margin-left:auto;font-size:17px;font-weight:500;color:var(--td);white-space:nowrap;padding-left:8px}
+.e-police{background:#EEF4FF;border:1.5px solid #C0D1F5}.e-police .e-icon{background:#C0D1F5}
+.e-women{background:#F0EBF9;border:1.5px solid #D4BEF0}.e-women .e-icon{background:#D4BEF0}
+.e-domestic{background:#FDE8ED;border:1.5px solid #F4C0CF}.e-domestic .e-icon{background:#F4C0CF}
+.e-crisis{background:var(--sage-l);border:1.5px solid #B8D9D0}.e-crisis .e-icon{background:#B8D9D0}
 
-  /* ── EMERGENCY ── */
-  .emergency-page{max-width:680px;margin:0 auto;padding:60px 1.5rem}
-  .emergency-btn-large{
-    display:flex;align-items:center;gap:18px;padding:22px 24px;
-    border-radius:var(--r-md);border:none;width:100%;cursor:pointer;
-    font-family:'DM Sans',sans-serif;transition:all 0.22s;margin-bottom:14px;text-align:left;
-  }
-  .emergency-btn-large:hover{transform:translateX(5px);box-shadow:0 8px 24px rgba(0,0,0,0.1)}
-  .e-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-  .e-text strong{display:block;font-size:16px;font-weight:500;color:var(--td)}
-  .e-text span{font-size:13px;color:var(--ts)}
-  .e-number{margin-left:auto;font-size:20px;font-weight:500;color:var(--td)}
-  .e-police{background:#EEF4FF;border:1.5px solid #C0D1F5}.e-police .e-icon{background:#C0D1F5}
-  .e-women{background:#F0EBF9;border:1.5px solid #D4BEF0}.e-women .e-icon{background:#D4BEF0}
-  .e-dom
+/* ── PAGE HEADER ── */
+.page-header{background:linear-gradient(135deg,#1a1535 0%,#2e2460 50%,#4a3a80 100%);padding:44px 1rem 38px;text-align:center}
+.page-header h1{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,5.5vw,2.7rem);font-weight:400;color:#fff;margin-bottom:10px;line-height:1.3}
+.page-header p{font-size:14px;color:rgba(255,255,255,0.75);max-width:500px;margin:0 auto;line-height:1.65}
+  page-body{max-width:1100px;margin:0 auto;padding:36px 1rem 56px}
+
+/* ── FOOTER ── */
+footer{position:relative;overflow:hidden;background:linear-gradient(160deg,#1a1535 0%,#2D2A3E 50%,#1f1c38 100%);padding:40px 1rem 22px}
+footer::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 20% 40%,rgba(139,127,212,0.12) 0%,transparent 70%),radial-gradient(ellipse 40% 50% at 80% 60%,rgba(123,168,212,0.1) 0%,transparent 70%)}
+.footer-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1}
+/* Footer grid: 1 col → 2 col sm → 4 col lg */
+.footer-grid{display:grid;grid-template-columns:1fr;gap:28px;margin-bottom:28px}
+.footer-brand-desc{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.72;margin:9px 0 13px;max-width:280px}
+.footer-logo-text{font-family:'Playfair Display',serif;font-size:19px;color:#fff;font-weight:500}
+.footer-col h4{font-size:13px;font-weight:500;color:rgba(255,255,255,0.9);margin-bottom:11px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.footer-col ul li{font-size:13px;color:rgba(255,255,255,0.5);cursor:pointer;transition:color 0.2s}
+.footer-col ul li:hover{color:rgba(255,255,255,0.9)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center}
+.footer-bottom p{font-size:12px;color:rgba(255,255,255,0.4)}
+.footer-trust-badges{display:flex;gap:7px;flex-wrap:wrap;margin-top:4px;justify-content:center}
+.footer-trust-item{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:4px 10px;font-size:11px;color:rgba(255,255,255,0.65)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%) translateY(80px);background:#fff;border:1px solid #B8D9D0;border-left:4px solid var(--sage);border-radius:var(--r-sm);padding:12px 16px;font-size:13px;color:var(--td);z-index:400;box-shadow:0 8px 32px rgba(0,0,0,0.15);width:calc(100% - 28px);max-width:340px;opacity:0;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ══════════════════════════════════════
+   BREAKPOINTS — Mobile-first progressive
+══════════════════════════════════════ */
+
+/* sm — ≥ 480px */
+@media(min-width:480px){
+  .hero-cards{grid-template-columns:repeat(3,1fr)}
+  .hero-card{height:170px}
+  .hero-actions{flex-direction:row;justify-content:center;flex-wrap:wrap}
+  .btn-hero-primary,.btn-hero-secondary,.btn-hero-emergency{width:auto;max-width:none}
+  .how-grid{grid-template-columns:repeat(2,1fr)}
+  .cards-3{grid-template-columns:repeat(2,1fr)}
+  .cards-4{grid-template-columns:repeat(2,1fr)}
+  .form-row{grid-template-columns:1fr 1fr;gap:13px}
+  .footer-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-bottom{flex-direction:row;justify-content:space-between;text-align:left}
+  .footer-trust-badges{justify-content:flex-start}
+  .cta-actions{flex-direction:row;justify-content:center;flex-wrap:wrap}
+  .btn-cta-p,.btn-cta-s{width:auto;max-width:none}
+}
+
+/* md — ≥ 640px */
+@media(min-width:640px){
+  nav{padding:0 1.5rem;height:66px}
+  .nav-logo-mark{width:36px;height:36px;font-size:14px}
+  .nav-logo-text{font-size:20px}
+  .quick-exit{font-size:13px;padding:9px 16px}
+  .hero-wrap{padding:72px 1.5rem 60px}
+  .hero-card{height:190px;border-radius:18px}
+  .section{padding:56px 1.5rem}
+  .trust-strip{padding:24px 1.5rem;gap:10px}
+  .trust-item{font-size:13px;padding:8px 14px}
+  .cta-wrap{padding:48px 32px;margin:0 1.25rem}
+  .form-page{padding:48px 1.5rem 60px}
+  .emergency-page{padding:48px 1.5rem 60px}
+  .page-header{padding:52px 1.5rem 44px}
+  .page-body{padding:44px 1.5rem 60px}
+  footer{padding:48px 1.5rem 24px}
+  .feature-card{height:115px}
+}
+
+/* lg — ≥ 1024px : full desktop layout */
+@media(min-width:1024px){
+  nav{padding:0 2rem;height:68px}
+  .nav-links{display:flex}
+  .hamburger{display:none}
+  .hero-wrap{padding:90px 2rem 72px}
+  .hero-card{height:200px;border-radius:20px}
+  .hero-cards{gap:16px}
+  .section{padding:64px 2rem}
+  .how-grid{grid-template-columns:repeat(4,1fr);gap:16px}
+  .cards-3{grid-template-columns:repeat(3,1fr);gap:20px}
+  .cards-4{grid-template-columns:repeat(4,1fr);gap:20px}
+  .counseling-layout{grid-template-columns:1fr 1fr;gap:32px}
+  .footer-grid{grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
+  .footer-bottom{flex-direction:row;text-align:left}
+  .cta-wrap{padding:60px 48px;margin:0 2rem;border-radius:var(--r-xl)}
+  .page-header{padding:56px 2rem 48px}
+  .page-body{padding:52px 2rem 64px}
+  .form-page{padding:60px 2rem}
+  .emergency-page{padding:60px 2rem}
+  footer{padding:56px 2rem 28px}
+  .emergency-btn-large{gap:18px;padding:20px 22px}
+  .e-icon{width:50px;height:50px;min-width:50px}
+  .e-text strong{font-size:15px}
+  .e-number{font-size:19px}
+  .feature-card{height:120px}
+}
+
+/* xl — ≥ 1280px */
+@media(min-width:1280px){
+  nav{padding:0 2.5rem}
+  .hero-wrap{padding:100px 2.5rem 80px}
+  .section{padding:72px 2.5rem}
+  footer{padding:60px 2.5rem 30px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- EMERGENCY BANNER -->
+<div class="emergency-banner">
+  <span class="banner-pill">Safe Space</span>
+  <span class="banner-text">Need immediate help?</span>
+  <span class="banner-link" onclick="navigate('emergency')">Emergency Contacts →</span>
+  <span class="banner-text">Women's Helpline: <strong>1091</strong></span>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="navigate('home')">
+    <div class="nav-logo-mark">N</div>
+    <span class="nav-logo-text">Navshika</span>
+  </div>
+  <div class="nav-links">
+    <button class="nav-link active" id="nav-home" onclick="navigate('home')">Home</button>
+    <button class="nav-link" id="nav-report" onclick="navigate('report')">Share Your Story</button>
+    <button class="nav-link" id="nav-counseling" onclick="navigate('counseling')">Counseling</button>
+    <button class="nav-link" id="nav-resources" onclick="navigate('resources')">Resources</button>
+    <button class="nav-link" id="nav-emergency" onclick="navigate('emergency')">Emergency Help</button>
+  </div>
+  <div class="nav-right">
+    <button class="quick-exit" onclick="window.open('https://www.google.com','_blank')">⚡ Quick Exit</button>
+    <button class="hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- SIDEBAR -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="sidebar" id="sidebar">
+  <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+  <button class="sidebar-link active" onclick="navigate('home');toggleSidebar()">Home</button>
+  <button class="sidebar-link" onclick="navigate('report');toggleSidebar()">Share Your Story</button>
+  <button class="sidebar-link" onclick="navigate('counseling');toggleSidebar()">Counseling</button>
+  <button class="sidebar-link" onclick="navigate('resources');toggleSidebar()">Resources</button>
+  <button class="sidebar-link" onclick="navigate('emergency');toggleSidebar()">Emergency Help</button>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-info">
+    <p class="si-label">Immediate help</p>
+    <p>Women's Helpline: <strong>1091</strong></p>
+    <p style="margin-top:5px">Police: <strong>100</strong></p>
+  </div>
+  <button class="sidebar-exit" onclick="window.open('https://www.google.com','_blank')">⚡ Quick Exit</button>
+</div>
+
+<!-- ══════════ HOME PAGE ══════════ -->
+<div class="page active" id="page-home">
+
+  <div class="hero-wrap">
+    <div class="hero-inner">
+      <div class="hero-badge"><div class="hero-badge-dot"></div>Confidential &amp; Anonymous Support</div>
+      <h1>You are <em>safe</em> here.<br>Your voice matters.</h1>
+      <p class="hero-sub">If you have experienced harassment, abuse, or violence, you are not alone. Compassionate support is available — whenever you are ready.</p>
+      <div class="hero-actions">
+        <button class="btn-hero-primary" onclick="navigate('report')">Share Your Story</button>
+        <button class="btn-hero-secondary" onclick="navigate('counseling')">Talk to a Counselor</button>
+        <button class="btn-hero-emergency" onclick="navigate('emergency')">Emergency Help</button>
+      </div>
+      <div class="hero-cards">
+        <div class="hero-card" onclick="navigate('report')">
+          <div class="hero-card-bg card-scene-story"><svg width="100%" height="100%" viewBox="0 0 260 200" style="position:absolute;inset:0"><circle cx="200" cy="40" r="80" fill="rgba(255,255,255,0.06)"/><circle cx="30" cy="160" r="60" fill="rgba(255,255,255,0.04)"/><circle cx="130" cy="85" r="30" fill="rgba(255,255,255,0.08)"/><path d="M115 80 L125 90 L145 70" stroke="rgba(255,255,255,0.5)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+          <div class="hero-card-overlay"></div>
+          <div class="hero-card-content"><h4>Share Your Story</h4><p>Anonymous &amp; confidential</p></div>
+        </div>
+        <div class="hero-card" onclick="navigate('counseling')">
+          <div class="hero-card-bg card-scene-counsel"><svg width="100%" height="100%" viewBox="0 0 260 200" style="position:absolute;inset:0"><circle cx="220" cy="30" r="90" fill="rgba(255,255,255,0.05)"/><circle cx="130" cy="80" r="35" fill="rgba(255,255,255,0.08)"/><path d="M113 80 C113 71 122 65 130 65 C138 65 147 71 147 80 C147 92 130 100 130 100 C130 100 113 92 113 80Z" fill="rgba(255,255,255,0.18)"/></svg></div>
+          <div class="hero-card-overlay"></div>
+          <div class="hero-card-content"><h4>Counseling Support</h4><p>Free &amp; trauma-informed</p></div>
+        </div>
+        <div class="hero-card" onclick="navigate('emergency')">
+          <div class="hero-card-bg card-scene-emergency"><svg width="100%" height="100%" viewBox="0 0 260 200" style="position:absolute;inset:0"><circle cx="200" cy="50" r="85" fill="rgba(255,255,255,0.05)"/><circle cx="130" cy="85" r="32" fill="rgba(255,255,255,0.09)"/><path d="M130 68 L130 90 M120 80 L140 80" stroke="rgba(255,255,255,0.55)" stroke-width="3" stroke-linecap="round"/><circle cx="130" cy="80" r="24" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/></svg></div>
+          <div class="hero-card-overlay"></div>
+          <div class="hero-card-content"><h4>Emergency Help</h4><p>Immediate assistance</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRUST STRIP -->
+  <div class="trust-strip">
+    <div class="trust-item"><svg class="trust-svg" viewBox="0 0 16 16" fill="none"><path d="M8 1L2 3.5V8C2 11.3 4.7 14.3 8 15C11.3 14.3 14 11.3 14 8V3.5L8 1Z" stroke="var(--lav)" stroke-width="1.3"/><path d="M5.5 8L7 9.5L10.5 6.5" stroke="var(--lav)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Confidential</div>
+    <div class="trust-item"><svg class="trust-svg" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="3" stroke="var(--lav)" stroke-width="1.3"/><path d="M2 14C2 11.2 4.7 9 8 9C11.3 9 14 11.2 14 14" stroke="var(--lav)" stroke-width="1.3" stroke-linecap="round"/></svg>Anonymous</div>
+    <div class="trust-item"><svg class="trust-svg" viewBox="0 0 16 16" fill="none"><path d="M8 2C5.2 2 3 4.2 3 7C3 9 4.1 10.8 5.7 11.7L5 14H11L10.3 11.7C11.9 10.8 13 9 13 7C13 4.2 10.8 2 8 2Z" stroke="var(--lav)" stroke-width="1.3" fill="none"/></svg>Free Counseling</div>
+    <div class="trust-item"><svg class="trust-svg" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="1.5" width="13" height="13" rx="3" stroke="var(--lav)" stroke-width="1.3"/><path d="M4 8H12M8 4L12 8L8 12" stroke="var(--lav)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Legal Guidance</div>
+    <div class="trust-item"><svg class="trust-svg" viewBox="0 0 16 16" fill="none"><path d="M8 2C8 2 3 5 3 9C3 11.2 5.2 13 8 13C10.8 13 13 11.2 13 9C13 5 8 2 8 2Z" stroke="var(--lav)" stroke-width="1.3" fill="none"/><circle cx="8" cy="9" r="1.5" fill="var(--lav)" opacity="0.5"/></svg>Judgment-Free</div>
+  </div>
+
+  <!-- HOW WE HELP -->
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-label">Our Support</div>
+        <h2 class="section-title">We are here to listen,<br>at every step</h2>
+        <p class="section-sub">Whether you need someone to talk to, help navigating legal options, or simply information — we are with you.</p>
+      </div>
+      <div class="how-grid">
+        <div class="how-item"><div class="how-num">01</div><h4>Share at your own pace</h4><p>You decide how much to share, and when. There is no pressure or judgment here.</p></div>
+        <div class="how-item"><div class="how-num">02</div><h4>Connect with a counselor</h4><p>Book a free, confidential session with a trained trauma-informed therapist.</p></div>
+        <div class="how-item"><div class="how-num">03</div><h4>Understand your rights</h4><p>Access clear legal resources and understand the options available to you.</p></div>
+        <div class="how-item"><div class="how-num">04</div><h4>Stay safe, plan ahead</h4><p>Safety planning tools and emergency contacts, accessible anytime.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURE VISUAL CARDS -->
+  <div class="section section-alt">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-label">Our Commitment</div>
+        <h2 class="section-title">Built on trust,<br>designed for safety</h2>
+      </div>
+      <div class="feature-cards">
+        <div class="feature-card"><div class="feature-card-bg" style="background:linear-gradient(140deg,#3a2860,#6a50a8)"><svg width="100%" height="100%" viewBox="0 0 180 120"><circle cx="140" cy="20" r="60" fill="rgba(255,255,255,0.05)"/><path d="M90 30L50 45V70C50 85 68 98 90 102C112 98 130 85 130 70V45L90 30Z" fill="rgba(255,255,255,0.07)"/><path d="M78 68L85 75L103 58" stroke="rgba(255,255,255,0.5)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div><div class="feature-card-overlay"></div><div class="feature-card-text">Confidential Support</div></div>
+        <div class="feature-card"><div class="feature-card-bg" style="background:linear-gradient(140deg,#1a3060,#3a60a0)"><svg width="100%" height="100%" viewBox="0 0 180 120"><circle cx="30" cy="100" r="70" fill="rgba(255,255,255,0.05)"/><circle cx="90" cy="55" r="28" fill="rgba(255,255,255,0.07)"/><circle cx="90" cy="55" r="14" fill="rgba(255,255,255,0.07)"/></svg></div><div class="feature-card-overlay"></div><div class="feature-card-text">Anonymous Reporting</div></div>
+        <div class="feature-card"><div class="feature-card-bg" style="background:linear-gradient(140deg,#1a4035,#3a8060)"><svg width="100%" height="100%" viewBox="0 0 180 120"><path d="M30 90C30 60 55 40 90 38C125 40 150 60 150 90" fill="rgba(255,255,255,0.06)"/><path d="M70 70C74 60 82 55 90 55C98 55 106 60 110 70" stroke="rgba(255,255,255,0.4)" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div><div class="feature-card-overlay"></div><div class="feature-card-text">Free Counseling</div></div>
+        <div class="feature-card"><div class="feature-card-bg" style="background:linear-gradient(140deg,#401a28,#8a3055)"><svg width="100%" height="100%" viewBox="0 0 180 120"><rect x="40" y="35" width="100" height="70" rx="8" fill="rgba(255,255,255,0.06)"/><path d="M60 58H120M60 70H100M60 82H110" stroke="rgba(255,255,255,0.35)" stroke-width="2" stroke-linecap="round"/></svg></div><div class="feature-card-overlay"></div><div class="feature-card-text">Legal Guidance</div></div>
+        <div class="feature-card"><div class="feature-card-bg" style="background:linear-gradient(140deg,#3a2010,#8a6020)"><svg width="100%" height="100%" viewBox="0 0 180 120"><circle cx="90" cy="60" r="40" fill="rgba(255,255,255,0.06)"/><path d="M90 40L90 62M80 52L90 62L100 52" stroke="rgba(255,255,255,0.4)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div><div class="feature-card-overlay"></div><div class="feature-card-text">24/7 Available</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN FEATURE CARDS -->
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-label">How We Help</div>
+        <h2 class="section-title">Every path to healing<br>is valid</h2>
+      </div>
+      <div class="cards-3">
+        <div class="card" onclick="navigate('counseling')"><div class="card-icon-wrap purple"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2C9.2 2 7 4.2 7 7C7 9 8.1 10.8 9.7 11.7L9 14H15L14.3 11.7C15.9 10.8 17 9 17 7C17 4.2 14.8 2 12 2Z" stroke="var(--lav)" stroke-width="1.5" fill="none"/><path d="M9 17C6 17.8 4 19.7 4 22H20C20 19.7 18 17.8 15 17" stroke="var(--lav)" stroke-width="1.5" stroke-linecap="round"/></svg></div><h3>Counseling &amp; Emotional Support</h3><p>Free, confidential sessions with trained therapists who understand trauma. You are safe to speak freely.</p><div class="card-link">Book a session →</div></div>
+        <div class="card" onclick="navigate('report')"><div class="card-icon-wrap blue"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 15C21 15.5 20.8 16 20.4 16.4C20 16.8 19.5 17 19 17H7L3 21V5C3 4.5 3.2 4 3.6 3.6C4 3.2 4.5 3 5 3H19C19.5 3 20 3.2 20.4 3.6C20.8 4 21 4.5 21 5V15Z" stroke="var(--blue-s)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Anonymous Reporting</h3><p>Share what happened in a safe, private space. No personal details required.</p><div class="card-link">Share your story →</div></div>
+        <div class="card" onclick="navigate('resources')"><div class="card-icon-wrap sage"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19.5V4.5C4 3.7 4.7 3 5.5 3H19.5L20 21H5.5C4.7 21 4 20.3 4 19.5Z" stroke="var(--sage)" stroke-width="1.5" fill="none"/><path d="M8 7H16M8 11H14M8 15H12" stroke="var(--sage)" stroke-width="1.5" stroke-linecap="round"/></svg></div><h3>Legal &amp; Safety Resources</h3><p>Understand your rights, access safety planning tools, and connect with legal aid organizations.</p><div class="card-link">Explore resources →</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="section" style="padding-top:0">
+    <div class="cta-wrap">
+      <div class="cta-inner">
+        <h2>You deserve support. We are here.</h2>
+        <p class="cta-sub">Taking the first step is the hardest part. Navshika is a safe, confidential space built for you.</p>
+        <div class="cta-actions">
+          <button class="btn-cta-p" onclick="navigate('report')">Begin when you're ready</button>
+          <button class="btn-cta-s" onclick="navigate('emergency')">Emergency contacts</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div>
+          <div style="display:flex;align-items:center;gap:9px">
+            <div class="nav-logo-mark" style="background:linear-gradient(135deg,#5A4FB5,#8B7FD4)">N</div>
+            <span class="footer-logo-text">Navshika</span>
+          </div>
+          <p class="footer-brand-desc">A safe, confidential platform supporting women who have experienced harassment, abuse, or violence. You are not alone.</p>
+          <div class="footer-trust-badges">
+            <span class="footer-trust-item">🔒 Secure</span>
+            <span class="footer-trust-item">👤 Anonymous</span>
+          </div>
+        </div>
+        <div class="footer-col"><h4>Support</h4><ul><li onclick="navigate('counseling')">Counseling</li><li onclick="navigate('report')">Report Incident</li><li onclick="navigate('emergency')">Emergency Help</li><li onclick="navigate('resources')">Resources</li></ul></div>
+        <div class="footer-col"><h4>Resources</h4><ul><li>Legal Rights</li><li>Safety Planning</li><li>Mental Health</li><li>Community Groups</li></ul></div>
+        <div class="footer-col"><h4>Helplines</h4><ul><li>Women's: 1091</li><li>Police: 100</li><li>NCPCR: 1098</li><li>iCall: 9152987821</li></ul></div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Navshika · Built with compassion</p>
+        <p style="color:rgba(255,255,255,0.35)">Privacy · Terms · <span style="color:var(--lav-m);cursor:pointer" onclick="window.open('https://www.google.com','_blank')">⚡ Quick Exit</span></p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════ REPORT PAGE ══════════ -->
+<div class="page" id="page-report">
+  <div class="page-header"><h1>Your voice matters here</h1><p>This is a safe, private space. You may share as much or as little as you choose. Anonymous reporting is available.</p></div>
+  <div class="form-page">
+    <div class="form-intro-card"><p><strong>You are in a safe space.</strong> What you share here is completely confidential. You do not need to provide your name — your story still matters and will be heard with care.</p></div>
+    <div class="privacy-box"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink:0;margin-top:1px"><path d="M10 1L3 3.5V10C3 13.8 6.2 17.1 10 18C13.8 17.1 17 13.8 17 10V3.5L10 1Z" stroke="#3D7A6E" stroke-width="1.5" fill="none"/><path d="M7 10L9 12L13 8" stroke="#3D7A6E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span><strong style="color:#2D6B61">Your information is private.</strong> You may report fully anonymously. We will never share your details without your explicit consent.</span></div>
+    <div style="background:#fff;border:1px solid var(--bdr);border-radius:var(--r-lg);padding:20px">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:400;margin-bottom:18px;color:var(--td)">Tell us what happened</h3>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Your Name <span class="form-optional">(optional)</span></label><input class="form-input" type="text" placeholder="You may leave this blank"></div>
+        <div class="form-group"><label class="form-label">Your Age <span class="form-optional">(optional)</span></label><input class="form-input" type="number" placeholder="e.g. 24"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Phone Number <span class="form-optional">(optional)</span></label><input class="form-input" type="tel" placeholder="Only if you'd like us to reach you"></div>
+        <div class="form-group"><label class="form-label">Email Address <span class="form-optional">(optional)</span></label><input class="form-input" type="email" placeholder="For follow-up if you wish"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Location <span class="form-optional">(optional)</span></label><input class="form-input" type="text" placeholder="City, state, or general area"></div>
+      <div class="form-group"><label class="form-label">Type of Incident</label><select class="form-select"><option value="" disabled selected>Please choose one</option><option>Workplace harassment</option><option>Domestic violence</option><option>Sexual assault or abuse</option><option>Stalking or intimidation</option><option>Emotional or psychological abuse</option><option>Online harassment or cyberstalking</option><option>Community or public harassment</option><option>Other</option></select></div>
+      <div class="form-group"><label class="form-label">What happened? <span class="form-optional">(share as much as you feel comfortable with)</span></label><textarea class="form-textarea" placeholder="There is no right or wrong way to tell your story. Take your time. We are here to listen."></textarea></div>
+      <div class="form-group"><label class="form-label">Supporting Documents <span class="form-optional">(optional)</span></label>
+        <div class="upload-zone" onclick="showToast('File upload will be available soon.')">
+          <div style="margin-bottom:7px"><svg width="26" height="26" viewBox="0 0 28 28" fill="none" style="margin:0 auto;display:block"><path d="M14 4L14 20M8 10L14 4L20 10" stroke="var(--lav)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 22H24" stroke="var(--lav)" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <p>Tap to attach photos, screenshots, or documents</p><span>All files are encrypted and stored securely</span>
+        </div>
+      </div>
+      <button class="form-submit" onclick="showToast('Your story has been received with care. Thank you for trusting us.')">Submit with Care</button>
+      <p style="text-align:center;font-size:12px;color:var(--ts);margin-top:10px">We will respond within 24 hours if you provided contact details</p>
+    </div>
+  </div>
+  <footer><div class="footer-inner"><div class="footer-bottom"><p>© 2026 Navshika · Confidential Support</p><span style="color:var(--lav-m);cursor:pointer;font-size:12px" onclick="window.open('https://www.google.com','_blank')">⚡ Quick Exit</span></div></div></footer>
+</div>
+
+  <!-- ══════════ COUNSELING PAGE ══════════ -->
+<div class="page" id="page-counseling">
+  <div class="page-header"><h1>You deserve to be heard</h1><p>Book a free, confidential session with a compassionate, trauma-informed counselor.</p></div>
+  <div class="page-body">
+    <div class="badges-row">
+      <span class="free-badge">✓ Free Sessions</span>
+      <span class="free-badge">✓ Trauma-Informed</span>
+      <span class="free-badge">✓ Confidential</span>
+      <span class="free-badge">✓ Hindi &amp; English</span>
+    </div>
+    <div class="counseling-layout">
+      <div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:400;margin-bottom:16px">Meet our counselors</h3>
+        <div class="counselor-card"><div class="counselor-avatar" style="background:#E8E2F8"><svg width="20" height="20" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="4" stroke="var(--lav)" stroke-width="1.3"/><path d="M3 20C3 16.7 6.6 14 11 14C15.4 14 19 16.7 19 20" stroke="var(--lav)" stroke-width="1.3" stroke-linecap="round"/></svg></div><div class="counselor-info"><h4>Dr. Anjali Mehta</h4><p>Trauma &amp; Grief Specialist · 8 years</p><div class="counselor-tags"><span class="tag">Domestic Violence</span><span class="tag blue">Sexual Trauma</span></div></div></div>
+        <div class="counselor-card"><div class="counselor-avatar" style="background:#E6EFF8"><svg width="20" height="20" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="4" stroke="var(--blue-s)" stroke-width="1.3"/><path d="M3 20C3 16.7 6.6 14 11 14C15.4 14 19 16.7 19 20" stroke="var(--blue-s)" stroke-width="1.3" stroke-linecap="round"/></svg></div><div class="counselor-info"><h4>Priya Sharma</h4><p>Psychologist · EMDR Certified · 6 years</p><div class="counselor-tags"><span class="tag">Anxiety &amp; PTSD</span><span class="tag sage">Workplace Trauma</span></div></div></div>
+        <div class="counselor-card"><div class="counselor-avatar" style="background:#E8F3EF"><svg width="20" height="20" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="4" stroke="var(--sage)" stroke-width="1.3"/><path d="M3 20C3 16.7 6.6 14 11 14C15.4 14 19 16.7 19 20" stroke="var(--sage)" stroke-width="1.3" stroke-linecap="round"/></svg></div><div class="counselor-info"><h4>Kavitha Nair</h4><p>Social Worker &amp; Counselor · 10 years</p><div class="counselor-tags"><span class="tag">Recovery Support</span><span class="tag blue">Safety Planning</span></div></div></div>
+        <div class="counseling-info"><h3>What to expect</h3><p>Your first session is a gentle conversation — no pressure to share anything you are not ready for.</p><ul><li><span class="check">✓</span> 50-minute private video or voice call</li><li><span class="check">✓</span> No personal history required</li><li><span class="check">✓</span> Evenings &amp; weekends available</li><li><span class="check">✓</span> Completely free, no insurance needed</li></ul></div>
+      </div>
+      <div>
+        <div style="background:#fff;border:1px solid var(--bdr);border-radius:var(--r-lg);padding:22px">
+          <h3 style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:400;margin-bottom:16px">Book your session</h3>
+          <div class="form-group"><label class="form-label">Your Name <span class="form-optional">(optional)</span></label><input class="form-input" type="text" placeholder="How would you like to be addressed?"></div>
+          <div class="form-group"><label class="form-label">Preferred Contact</label><input class="form-input" type="text" placeholder="Phone or email"></div>
+          <div class="form-group"><label class="form-label">Preferred Date</label><input class="form-input" type="date"></div>
+          <div class="form-group"><label class="form-label">Preferred Time</label><div class="time-slots"><div class="time-slot" onclick="selectSlot(this)">9:00 AM</div><div class="time-slot" onclick="selectSlot(this)">11:00 AM</div><div class="time-slot" onclick="selectSlot(this)">1:00 PM</div><div class="time-slot" onclick="selectSlot(this)">3:00 PM</div><div class="time-slot" onclick="selectSlot(this)">5:00 PM</div><div class="time-slot" onclick="selectSlot(this)">7:00 PM</div></div></div>
+          <div class="form-group"><label class="form-label">Session Format</label><select class="form-select"><option>Video call (private link)</option><option>Voice call only</option><option>In-person (if available)</option></select></div>
+          <div class="form-group"><label class="form-label">Anything you'd like us to know? <span class="form-optional">(optional)</span></label><textarea class="form-textarea" style="min-height:85px" placeholder="Share any preferences or concerns."></textarea></div>
+          <button class="form-submit" onclick="showToast('Your session request has been received. We will confirm within 2 hours.')">Request My Session</button>
+          <p style="text-align:center;font-size:12px;color:var(--ts);margin-top:8px">Confirmation sent within 2 hours</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer><div class="footer-inner"><div class="footer-bottom"><p>© 2026 Navshika · Free Counseling Support</p><span style="color:var(--lav-m);cursor:pointer;font-size:12px" onclick="window.open('https://www.google.com','_blank')">⚡ Quick Exit</span></div></div></footer>
+</div>
+
+<!-- ══════════ RESOURCES PAGE ══════════ -->
+<div class="page" id="page-resources">
+  <div class="page-header"><h1>Knowledge is empowerment</h1><p>Carefully curated resources to guide you through recovery, legal options, and planning for safety.</p></div>
+  <div class="page-body">
+    <div class="cards-4">
+      <div class="resource-card"><div class="resource-header"><svg width="24" height="24" viewBox="0 0 28 28" fill="none"><path d="M14 2L4 6V14C4 19.5 8.5 24.4 14 26C19.5 24.4 24 19.5 24 14V6L14 2Z" stroke="#3B6BB5" stroke-width="1.5" fill="none"/><path d="M10 14L12.5 16.5L18 11" stroke="#3B6BB5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="resource-tag" style="background:#EEF4FF;color:#3B6BB5">Safety</span></div><h3>What to do immediately after harassment</h3><p>Step-by-step guidance on documenting, reporting, and protecting yourself.</p><div class="resource-read">Read guide →</div></div>
+      <div class="resource-card"><div class="resource-header"><svg width="24" height="24" viewBox="0 0 28 28" fill="none"><path d="M6 24V8L14 4L22 8V24" stroke="#7A5CB8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><rect x="10" y="14" width="8" height="10" rx="1" stroke="#7A5CB8" stroke-width="1.5" fill="none"/></svg><span class="resource-tag" style="background:#F0EBF9;color:#7A5CB8">Legal</span></div><h3>Understanding your legal rights in India</h3><p>The POSH Act, Domestic Violence Act, and IPC sections in plain language.</p><div class="resource-read">Read guide →</div></div>
+      <div class="resource-card"><div class="resource-header"><svg width="24" height="24" viewBox="0 0 28 28" fill="none"><path d="M14 3C9 3 5 7 5 12C5 15.3 6.7 18.2 9.3 19.8L8 24H20L18.7 19.8C21.3 18.2 23 15.3 23 12C23 7 19 3 14 3Z" stroke="#3D7A6E" stroke-width="1.5" fill="none"/></svg><span class="resource-tag" style="background:var(--sage-l);color:#3D7A6E">Healing</span></div><h3>Mental health and trauma recovery</h3><p>Understanding trauma responses, finding the right therapy, and building a support network.</p><div class="resource-read">Read guide →</div></div>
+      <div class="resource-card"><div class="resource-header"><svg width="24" height="24" viewBox="0 0 28 28" fill="none"><rect x="4" y="6" width="20" height="16" rx="3" stroke="#C0436A" stroke-width="1.5" fill="none"/><path d="M10 12H18M10 16H15" stroke="#C0436A" stroke-width="1.5" stroke-linecap="round"/></svg><span class="resource-tag" style="background:#FDE8ED;color:#C0436A">Safety</span></div><h3>Personal safety planning</h3><p>Creating a safety plan for home, workplace, and public spaces. Actionable steps for today.</p><div class="resource-read">Read guide →</div></div>
+      <div class="resource-card"><div class="resource-header"><svg width="24" height="24" viewBox="0 0 28 28" fill="none"><circle cx="10" cy="12" r="4" stroke="#3B6BB5" stroke-width="1.5" fill="none"/><circle cx="18" cy="12" r="4" stroke="#3B6BB5" stroke-width="1.5" fill="none"/><path d="M4 22C4 18.7 6.7 16 10 16M14 22C14 18.7 16.7 16 20 16" stroke="#3B6BB5" stroke-width="1.5" stroke-linecap="round"/></svg><span class="resource-tag" style="background:#EEF4FF;color:#3B6BB5">Community</span></div><h3>Finding community and peer support</h3><p>Support groups, survivor communities, and peer networks where you can connect.</p><div class="resource-read">Read guide →</div></div>
+      <div class="resource-card"><div class="resource-header"><svg width="24" height="24" viewBox="0 0 28 28" fill="none"><rect x="4" y="4" width="20" height="20" rx="3" stroke="#7A5CB8" stroke-width="1.5" fill="none"/><path d="M9 12H19M9 16H15M9 8H19" stroke="#7A5CB8" stroke-width="1.5" stroke-linecap="round"/></svg><span class="resource-tag" style="background:#F0EBF9;color:#7A5CB8">Legal</span></div><h3>Workplace harassment &amp; your rights</h3><p>How to file a complaint with your ICC and what protections the POSH Act gives you.</p><div class="resource-read">Read guide →</div></div>
+      <div class="resource-card"><div class="resource-header"><svg width="24" height="24" viewBox="0 0 28 28" fill="none"><rect x="5" y="7" width="18" height="14" rx="3" stroke="#3D7A6E" stroke-width="1.5" fill="none"/><circle cx="14" cy="14" r="3" stroke="#3D7A6E" stroke-width="1.3" fill="none"/><path d="M5 11H23M9 7V5M19 7V5" stroke="#3D7A6E" stroke-width="1.3" stroke-linecap="round"/></svg><span class="resource-tag" style="background:var(--sage-l);color:#3D7A6E">Digital</span></div><h3>Protecting yourself from cyber harassment</h3><p>Steps to document, report, and protect yourself from online abuse and cyberstalking.</p><div class="resource-read">Read guide →</div></div>
+      <div class="resource-card"><div class="resource-header"><svg width="24" height="24" viewBox="0 0 28 28" fill="none"><path d="M14 5C9.6 5 6 8.6 6 13C6 17.4 9.6 21 14 21C18.4 21 22 17.4 22 13C22 8.6 18.4 5 14 5Z" stroke="#C0436A" stroke-width="1.5" fill="none"/><path d="M11 13C11 11.3 12.3 10 14 10C15.7 10 17 11.3 17 13C17 14.7 14 17 14 17" stroke="#C0436A" stroke-width="1.5" stroke-linecap="round"/><circle cx="14" cy="19" r="0.8" fill="#C0436A"/></svg><span class="resource-tag" style="background:#FDE8ED;color:#C0436A">Support</span></div><h3>How to support a survivor</h3><p>A guide for family, friends, and colleagues on how to listen and avoid harmful responses.</p><div class="resource-read">Read guide →</div></div>
+    </div>
+    <div style="margin-top:44px">
+      <div class="section-header"><div class="section-label">National Helplines</div><h2 class="section-title">Reach out anytime</h2></div>
+      <div class="cards-4">
+        <div class="card" style="text-align:center"><svg width="28" height="28" viewBox="0 0 32 32" fill="none" style="margin:0 auto 9px"><path d="M6 8C6 6.9 6.9 6 8 6H12L14 12L11 14C12.5 17.5 14.5 19.5 18 21L20 18L26 20V24C26 25.1 25.1 26 24 26C13.4 26 6 18.6 6 8Z" stroke="var(--lav)" stroke-width="1.5" fill="none"/></svg><h3>Women's Helpline</h3><p style="font-size:20px;font-weight:500;color:var(--lav);margin:6px 0">1091</p><p>24/7 support for women</p></div>
+        <div class="card" style="text-align:center"><svg width="28" height="28" viewBox="0 0 32 32" fill="none" style="margin:0 auto 9px"><path d="M8 6H24C25.1 6 26 6.9 26 8V24C26 25.1 25.1 26 24 26H8C6.9 26 6 25.1 6 24V8C6 6.9 6.9 6 8 6Z" stroke="var(--lav)" stroke-width="1.5" fill="none"/><path d="M12 16H20M16 12V20" stroke="var(--lav)" stroke-width="1.5" stroke-linecap="round"/></svg><h3>Police Emergency</h3><p style="font-size:20px;font-weight:500;color:var(--lav);margin:6px 0">100</p><p>Immediate assistance</p></div>
+        <div class="card" style="text-align:center"><svg width="28" height="28" viewBox="0 0 32 32" fill="none" style="margin:0 auto 9px"><circle cx="16" cy="14" r="6" stroke="var(--lav)" stroke-width="1.5" fill="none"/><path d="M8 26C8 22.7 11.6 20 16 20C20.4 20 24 22.7 24 26" stroke="var(--lav)" stroke-width="1.5" stroke-linecap="round"/></svg><h3>iCall Mental Health</h3><p style="font-size:13px;font-weight:500;color:var(--lav);margin:6px 0">9152987821</p><p>Psychological support</p></div>
+        <div class="card" style="text-align:center"><svg width="28" height="28" viewBox="0 0 32 32" fill="none" style="margin:0 auto 9px"><path d="M16 4L6 8V16C6 21.5 10.4 26.7 16 28C21.6 26.7 26 21.5 26 16V8L16 4Z" stroke="var(--lav)" stroke-width="1.5" fill="none"/></svg><h3>NCPCR Helpline</h3><p style="font-size:20px;font-weight:500;color:var(--lav);margin:6px 0">1098</p><p>Child welfare support</p></div>
+      </div>
+    </div>
+  </div>
+  <footer><div class="footer-inner"><div class="footer-bottom"><p>© 2026 Navshika · Empowering through Knowledge</p><span style="color:var(--lav-m);cursor:pointer;font-size:12px" onclick="window.open('https://www.google.com','_blank')">⚡ Quick Exit</span></div></div></footer>
+</div>
+
+<!-- ══════════ EMERGENCY PAGE ══════════ -->
+<div class="page" id="page-emergency">
+  <div class="page-header" style="background:linear-gradient(135deg,#2a1020 0%,#4a1535 50%,#6a2050 100%)"><h1>You are not alone right now</h1><p>If you are in immediate danger, call 100. These contacts are available to help you — any time, any day.</p></div>
+  <div class="emergency-page">
+    <div style="background:#FDE8ED;border:1.5px solid #F4C0CF;border-radius:var(--r-lg);padding:16px 18px;margin-bottom:20px;text-align:center">
+      <p style="font-size:13px;color:#8B3A4A;font-weight:500">Immediate danger? Call <strong style="font-size:17px">100</strong> (Police) or <strong style="font-size:17px">1091</strong> (Women's Helpline)</p>
+    </div>
+    <button class="emergency-btn-large e-police" onclick="showToast('Connecting to Police Emergency: 100')"><div class="e-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5V11C4 15.4 7.6 19.4 12 21C16.4 19.4 20 15.4 20 11V5L12 2Z" stroke="#3B6BB5" stroke-width="1.5" fill="none"/><path d="M9 12L11 14L15 10" stroke="#3B6BB5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="e-text"><strong>Call Police</strong><span>Emergency law enforcement assistance</span></div><div class="e-number">100</div></button>
+    <button class="emergency-btn-large e-women" onclick="showToast('Connecting to Women\'s Helpline: 1091')"><div class="e-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="var(--lav)" stroke-width="1.5" fill="none"/><path d="M4 20C4 16.7 7.6 14 12 14C16.4 14 20 16.7 20 20" stroke="var(--lav)" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="e-text"><strong>Women's Helpline</strong><span>24/7 support and immediate assistance</span></div><div class="e-number">1091</div></button>
+    <button class="emergency-btn-large e-domestic" onclick="showToast('Connecting to Domestic Violence Helpline: 181')"><div class="e-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 12L12 4L21 12V20C21 20.6 20.6 21 20 21H15V15H9V21H4C3.4 21 3 20.6 3 20V12Z" stroke="#C0436A" stroke-width="1.5" fill="none"/></svg></div><div class="e-text"><strong>Domestic Violence Support</strong><span>Shelter, legal aid, and safety support</span></div><div class="e-number">181</div></button>
+    <button class="emergency-btn-large e-crisis" onclick="showToast('Connecting to iCall: 9152987821')"><div class="e-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="var(--sage)" stroke-width="1.5" fill="none"/><path d="M12 8C12 8 9 10 9 13C9 14.7 10.3 16 12 16C13.7 16 15 14.7 15 13C15 10 12 8 12 8Z" stroke="var(--sage)" stroke-width="1.3" fill="none"/></svg></div><div class="e-text"><strong>Crisis Mental Health Support</strong><span>iCall — immediate psychological support</span></div><div class="e-number" style="font-size:13px">9152987821</div></button>
+    <div style="margin-top:18px;background:#fff;border:1px solid var(--bdr);border-radius:var(--r-lg);padding:18px">
+      <h3 style="font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:400;margin-bottom:12px">More resources</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+        <div style="padding:11px;background:var(--lav-l);border-radius:var(--r-sm);text-align:center"><p style="font-size:12px;font-weight:500;color:var(--lav)">NCPCR</p><p style="font-size:16px;font-weight:500;color:var(--td);margin-top:3px">1098</p></div>
+        <div style="padding:11px;background:var(--blue-l);border-radius:var(--r-sm);text-align:center"><p style="font-size:12px;font-weight:500;color:var(--blue-s)">Cyber Crime</p><p style="font-size:16px;font-weight:500;color:var(--td);margin-top:3px">1930</p></div>
+        <div style="padding:11px;background:var(--sage-l);border-radius:var(--r-sm);text-align:center"><p style="font-size:12px;font-weight:500;color:var(--sage)">Ambulance</p><p style="font-size:16px;font-weight:500;color:var(--td);margin-top:3px">108</p></div>
+        <div style="padding:11px;background:var(--rose-l);border-radius:var(--r-sm);text-align:center"><p style="font-size:12px;font-weight:500;color:var(--rose)">One Stop</p><p style="font-size:16px;font-weight:500;color:var(--td);margin-top:3px">181</p></div>
+      </div>
+    </div>
+    <div style="margin-top:14px;text-align:center;padding:18px;background:var(--lav-l);border-radius:var(--r-md)">
+      <p style="font-size:13px;color:var(--tm);line-height:1.65">You are brave for reaching out. Every step you take to protect yourself matters. We are here with you.</p>
+      <button onclick="navigate('counseling')" style="margin-top:13px;padding:12px 24px;border-radius:var(--r-md);background:linear-gradient(135deg,var(--lav-d),var(--lav));color:#fff;font-size:14px;font-weight:500;border:none;box-shadow:0 4px 14px rgba(90,79,181,0.3);width:100%;max-width:260px;cursor:pointer">Talk to a counselor now</button>
+    </div>
+  </div>
+  <footer><div class="footer-inner"><div class="footer-bottom"><p>© 2026 Navshika · Emergency Support</p><span style="color:var(--lav-m);cursor:pointer;font-size:12px" onclick="window.open('https://www.google.com','_blank')">⚡ Quick Exit</span></div></div></footer>
+</div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+function navigate(p){
+  document.querySelectorAll('.page').forEach(pg=>pg.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  const n=document.getElementById('nav-'+p);
+  if(n)n.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+function selectSlot(el){
+  document.querySelectorAll('.time-slot').forEach(s=>s.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&document.getElementById('sidebar').classList.contains('open'))toggleSidebar();
+});
+</script>
+</body>
+</html>
